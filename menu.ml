@@ -69,9 +69,16 @@ let run prompt stdin botbar focus_foreground focus_background normal_foreground
     if stdin then Engine.singleton (Source.stdin ())
     else
       Engine.{
-        sources = [ Source.binaries; Source.from_list [("twitch", "mpv", "")] ];
+        sources = [
+          Source.from_list [
+            ("twitch", "mpv", "");
+            ("papiers", "xdg-open", "");
+          ];
+          Source.binaries
+        ];
         transition = fun c -> match c.display with
           | "twitch" -> Engine.singleton (Twitch.source "twitch_user")
+          | "papiers" -> Engine.singleton (Papiers.source "/home/armael/Papers")
           | _ -> Engine.iterate [ Source.files (Sys.getenv "HOME") ]
       }
   in
@@ -84,6 +91,7 @@ let run prompt stdin botbar focus_foreground focus_background normal_foreground
     in
     match entries with
     | "twitch" :: _ -> set_layout (State.MultiLine 10) st
+    | "papiers" :: _ -> set_layout (State.MultiLine 10) st
     | _ -> set_layout layout st
   in
   match Dmlenu.run_list ~prompt ~layout ~topbar:(not botbar) ~colors ~hook program with

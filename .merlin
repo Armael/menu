@@ -7,3 +7,4 @@ PKG cohttp
 PKG cohttp.lwt
 PKG lwt.ppx
 PKG yojson
+PKG papierslib
