@@ -54,10 +54,19 @@ module Parameter = struct
       Arg.(value & flag & info ["s"; "stdin"] ~doc)
 end
 
+let reorder_dotfiles_end clist =
+  let dotfiles, rest =
+    List.partition (fun (s, _) ->
+        try s.Candidate.display.[0] = '.'
+        with Not_found -> false
+      ) clist
+  in
+  rest @ dotfiles
+
 let run prompt stdin botbar focus_foreground focus_background normal_foreground
       normal_background match_foreground window_background lines =
   let () = Matching.(set_match_query_fun @@ subset ~case:false) in
-  let () = Ordering.(set_reorder_matched_fun prefixes_first) in
+  let () = Ordering.(set_reorder_matched_fun (reorder_dotfiles_end %> prefixes_first)) in
   let colors = { X.Colors.focus_foreground; focus_background;
                  normal_foreground; normal_background; match_foreground; window_background } in
   let layout =
