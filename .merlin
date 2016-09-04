@@ -1,0 +1,9 @@
+B _build
+PKG dmlenu
+PKG dlmenu.extra
+PKG batteries
+PKG cmdliner
+PKG cohttp
+PKG cohttp.lwt
+PKG lwt.ppx
+PKG yojson
