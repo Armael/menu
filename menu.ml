@@ -63,6 +63,8 @@ let reorder_dotfiles_end clist =
   in
   rest @ dotfiles
 
+let (^/) = Filename.concat
+
 let run prompt stdin botbar focus_foreground focus_background normal_foreground
       normal_background match_foreground window_background lines =
   let () = Matching.(set_match_query_fun @@ subset ~case:false) in
@@ -74,6 +76,7 @@ let run prompt stdin botbar focus_foreground focus_background normal_foreground
     | 0 -> State.SingleLine
     | n -> State.MultiLine n
   in
+  let home = Sys.getenv "HOME" in
   let program =
     if stdin then Engine.singleton (Source.stdin ())
     else
@@ -82,13 +85,21 @@ let run prompt stdin botbar focus_foreground focus_background normal_foreground
           Source.from_list [
             ("twitch", "mpv", "");
             ("papiers", "xdg-open", "");
+            ("randr", "sh", "");
+            ("j", "emacs", "");
           ];
           Source.binaries
         ];
         transition = fun c -> match c.display with
           | "twitch" -> Engine.singleton (Twitch.source "twitch_user")
-          | "papiers" -> Engine.singleton (Papiers.source "/home/armael/Papers")
-          | _ -> Engine.iterate [ Source.files (Sys.getenv "HOME") ]
+          | "papiers" -> Engine.singleton (Papiers.source (home ^/ "Papers"))
+          | "randr" -> Engine.singleton (Source.files (home ^/ ".screenlayout"))
+          | "j" -> Engine.singleton (Source.from_list [
+              ("recherche", home ^/ "journal" ^/ "recherche", "");
+              ("lecture", home ^/ "journal" ^/ "pile-de-lecture", "");
+              ("loisirs", home ^/ "journal" ^/ "loisirs", "")
+            ])
+          | _ -> Engine.iterate [ Source.files home ]
       }
   in
   let set_layout l st =
