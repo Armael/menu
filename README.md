@@ -1,6 +1,6 @@
 ## menu
 
-A dmenu-like multi-purpose menu bar
+A dmenu-like multi-purpose menu bar, built using [dmlenu](https://github.com/the-lambda-church/dmlenu).
 
 ## Build
 
