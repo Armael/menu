@@ -1,5 +1,5 @@
 all:
-	ocamlbuild -use-ocamlfind menu.native
+	dune build src/menu.exe
 
 clean:
-	ocamlbuild -clean
+	dune clean

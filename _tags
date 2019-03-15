@@ -1,1 +1,0 @@
-true: package(dmlenu, dmlenu.extra, cmdliner, batteries, cohttp.lwt, yojson, lwt.ppx, papierslib)

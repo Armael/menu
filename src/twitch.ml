@@ -5,7 +5,7 @@ open Cohttp_lwt_unix
 
 let headers = Header.of_list [
     ("Accept", "application/vnd.twitch.v3+json");
-    ("Client-ID", "pvv7ytxj4v7i10h0p3s7ewf4vpoz5fc")
+    ("Client-ID", "XXXX")
   ]
 
 let limit = 100
@@ -17,7 +17,7 @@ let access_kraken ?(payload = []) cmd =
   in
   let%lwt (rcode, body) = Client.get ~headers url in
   if Code.(is_success (code_of_status rcode.Response.status)) then
-    let%lwt body_s = Cohttp_lwt_body.to_string body in
+    let%lwt body_s = Cohttp_lwt.Body.to_string body in
     Lwt.return (Some (Yojson.Basic.from_string body_s))
   else
     Lwt.return None
@@ -110,7 +110,7 @@ let get_online_followed_channels ~nick () =
 
 let source nick =
   let source_it_of_channel =
-    function { name; display_name; game; status; url } ->
+    function { name = _; display_name; game; status; url } ->
       (display_name, url,
        match game with
        | None -> Printf.sprintf "%s" status

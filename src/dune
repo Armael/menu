@@ -1,0 +1,5 @@
+(executable
+  (name menu)
+  (libraries dmlenu dmlenu.extra cmdliner batteries
+             cohttp-lwt-unix yojson papierslib)
+  (preprocess (pps lwt_ppx)))
