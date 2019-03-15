@@ -35,7 +35,7 @@ module Parameter = struct
 
     let match_foreground =
       let doc = "Color to display matches inside candidates" in
-      Arg.(value & opt string match_foreground_default & info ["ff"] ~docv: "mf" ~doc)
+      Arg.(value & opt string match_foreground_default & info ["mf"] ~docv: "mf" ~doc)
 
     let window_background =
       let doc = "Color of the window background" in
