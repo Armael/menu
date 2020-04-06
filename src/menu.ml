@@ -83,7 +83,6 @@ let run prompt stdin botbar focus_foreground focus_background normal_foreground
       Engine.{
         sources = [
           Source.from_list [
-            ("twitch", "mpv", "");
             ("papiers", "evince", "");
             ("randr", "sh", "");
             ("j", "emacs", "");
@@ -91,7 +90,6 @@ let run prompt stdin botbar focus_foreground focus_background normal_foreground
           Source.binaries
         ];
         transition = fun c -> match c.display with
-          | "twitch" -> Engine.singleton (Twitch.source "VertBrocoli")
           | "papiers" -> Engine.singleton (Papiers.source (home ^/ "Papers"))
           | "randr" -> Engine.singleton (Source.files (home ^/ ".screenlayout"))
           | "j" -> Engine.singleton (Source.from_list [
@@ -111,7 +109,6 @@ let run prompt stdin botbar focus_foreground focus_background normal_foreground
       |> List.map (fun (_, c) -> c.display)
     in
     match entries with
-    | "twitch" :: _ -> set_layout (State.MultiLine 10) st
     | "papiers" :: _ -> set_layout (State.MultiLine 10) st
     | _ -> set_layout layout st
   in
