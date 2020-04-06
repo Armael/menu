@@ -1,5 +1,6 @@
 open Batteries
 open Cmdliner
+open Dmlenu
 open Candidate
 
 module Parameter = struct
@@ -102,17 +103,17 @@ let run prompt stdin botbar focus_foreground focus_background normal_foreground
       }
   in
   let set_layout l st =
-    Dmlenu.{ st with state = { st.state with State.layout = l } } in
+    App.{ st with state = { st.state with State.layout = l } } in
   let hook st =
     let entries =
-      st.Dmlenu.state.State.entries
+      st.App.state.State.entries
       |> List.map (fun (_, c) -> c.display)
     in
     match entries with
     | "papiers" :: _ -> set_layout (State.MultiLine 10) st
     | _ -> set_layout layout st
   in
-  match Dmlenu.run_list ~prompt ~layout ~topbar:(not botbar) ~colors ~hook program with
+  match App.run_list ~prompt ~layout ~topbar:(not botbar) ~colors ~hook program with
   | [] -> ()
   | prog :: _ as args -> Unix.execvp prog (Array.of_list args)
 

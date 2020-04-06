@@ -1,7 +1,8 @@
 open Batteries
+open Dmlenu
 
 let query_of_string s =
-  let words = String.nsplit ~by:" " s
+  let words = String.split_on_string ~by:" " s
               |> List.filter (not % String.is_empty) in
   List.map (fun w ->
       let open Papierslib in
