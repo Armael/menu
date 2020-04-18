@@ -70,8 +70,14 @@ let run prompt stdin botbar focus_foreground focus_background normal_foreground
       normal_background match_foreground window_background lines =
   let () = Matching.(set_match_query_fun @@ subset ~case:false) in
   let () = Ordering.(set_reorder_matched_fun (reorder_dotfiles_end %> prefixes_first)) in
-  let colors = { X.Colors.focus_foreground; focus_background;
-                 normal_foreground; normal_background; match_foreground; window_background } in
+  let colors = Ui.Colors.({
+    focus_foreground = Draw.Color.of_string_exn focus_foreground;
+    focus_background = Draw.Color.of_string_exn focus_background;
+    normal_foreground = Draw.Color.of_string_exn normal_foreground;
+    normal_background = Draw.Color.of_string_exn normal_background;
+    match_foreground = Draw.Color.of_string_exn match_foreground;
+    window_background = Draw.Color.of_string_exn window_background;
+  }) in
   let layout =
     match lines with
     | 0 -> State.SingleLine
@@ -88,7 +94,7 @@ let run prompt stdin botbar focus_foreground focus_background normal_foreground
             ("randr", "sh", "");
             ("j", "emacs", "");
           ];
-          Source.binaries
+          (Lazy.force Source.binaries)
         ];
         transition = fun c -> match c.display with
           | "papiers" -> Engine.singleton (Papiers.source (home ^/ "Papers"))
@@ -110,7 +116,8 @@ let run prompt stdin botbar focus_foreground focus_background normal_foreground
       |> List.map (fun (_, c) -> c.display)
     in
     match entries with
-    | "papiers" :: _ -> set_layout (State.MultiLine 10) st
+    | "papiers" :: _
+    | ":" :: _ -> set_layout (State.MultiLine 15) st
     | _ -> set_layout layout st
   in
   match App.run_list ~prompt ~layout ~topbar:(not botbar) ~colors ~hook program with
